@@ -7,9 +7,9 @@ namespace Properties
     /// </summary>
     public class Card
     {
-        private readonly string seed;
-        private readonly string name;
-        private readonly int ordinal;
+        public string Seed { get; }
+        public string Name { get; }
+        public int Ordinal { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Card"/> class.
@@ -19,9 +19,9 @@ namespace Properties
         /// <param name="ordinal">the ordinal number of the card.</param>
         public Card(string name, string seed, int ordinal)
         {
-            this.name = name;
-            this.ordinal = ordinal;
-            this.seed = seed;
+            this.Name = name;
+            this.Ordinal = ordinal;
+            this.Seed = seed;
         }
 
         /// <summary>
@@ -32,33 +32,25 @@ namespace Properties
         {
         }
 
-        // TODO improve
-        public string GetSeed()
-        {
-            return this.seed;
-        }
-
-        // TODO improve
-        public string GetName()
-        {
-            return this.name;
-        }
-
-        // TODO improve
-        public int GetOrdinal()
-        {
-            return this.ordinal;
-        }
-
         /// <inheritdoc cref="object.ToString"/>
         public override string ToString()
         {
-            // TODO understand string interpolation
-            return $"{this.GetType().Name}(Name={this.GetName()}, Seed={this.GetSeed()}, Ordinal={this.GetOrdinal()})";
+            return $"{this.GetType().Name}(Name={this.Name}, Seed={this.Seed}, Ordinal={this.Ordinal})";
         }
 
-        // TODO generate Equals(object obj)
-
-        // TODO generate GetHashCode()
+        public override bool Equals(object obj)
+        {
+            if (obj is Card)
+            {
+                return this.GetHashCode() == obj.GetHashCode();
+            }
+            return false;
+        }
+        
+        public override int GetHashCode()
+        {
+            return this.Name.GetHashCode() + this.Ordinal.GetHashCode() + this.Seed.GetHashCode();
+        }
+    
     }
 }
