@@ -21,33 +21,50 @@ namespace ComplexAlgebra
     ///     - e.g. via the Equals(object) method
     public class Complex
     {
-        public double Real { get; set; }
-        public double Imaginary { get; set; }
+        public double Real { get; }
+        public double Imaginary { get; }
 
         public Complex(double real, double imaginary)
         {
-            this.Real = real;
-            this.Imaginary = imaginary;
+            Real = real;
+            Imaginary = imaginary;
         }
 
-        public double Modulus => Math.Sqrt(Math.Pow(this.Real, 2) + Math.Pow(this.Imaginary, 2));
+        public double Modulus => Math.Sqrt(Math.Pow(Real, 2) + Math.Pow(Imaginary, 2));
 
-        public double Phase => Math.Atan(this.Imaginary / this.Real);
+        public double Phase => Math.Atan(Imaginary / Real);
 
-        public Complex Complement() => new Complex(this.Real, -this.Imaginary);
+        public Complex Complement() => new Complex(Real, -Imaginary);
 
-        public Complex Plus(Complex b) => new Complex(this.Real + b.Real, this.Imaginary + b.Imaginary);
+        public Complex Plus(Complex b) => new Complex(Real + b.Real, Imaginary + b.Imaginary);
 
-        public Complex Minus(Complex b) => new Complex(this.Real - b.Real, this.Imaginary - b.Imaginary);
+        public Complex Minus(Complex b) => new Complex(Real - b.Real, Imaginary - b.Imaginary);
 
-        public String ToString()
+        public override String ToString()
         {
-            String str = $"{this.Real}";
-            str = (this.Imaginary >= 0 ? $"{str}+{this.Imaginary}i" : $"{str}{this.Imaginary}i");
-            return str;
+            if (Real.Equals(0) && Imaginary.Equals(0))
+            {
+                return "0";
+            }
+            else
+            {
+                String str = Real != 0 ? $"{Real}" : "";
+                double abs = Math.Abs(Imaginary);
+                if (abs.Equals(1))
+                {
+                    str = Real != 0 ? (Imaginary > 0 ? $"{str} + i" : $"{str} - i")
+                        : (Imaginary > 0 ? "i" : "-i");
+                }
+                else if (!Imaginary.Equals(0))
+                {
+                    str = Real != 0 ? (Imaginary > 0 ? $"{str} + {Imaginary}i" : $"{str} - {abs}i")
+                        : (Imaginary > 0 ? $"{Imaginary}i" : $"-{abs}i");
+                }
+                return str;
+            }
         }
 
-        public bool Equals(Complex b) => this.Real.Equals(b.Real) && this.Imaginary.Equals(b.Imaginary);
+        public bool Equals(Complex b) => Real.Equals(b.Real) && Imaginary.Equals(b.Imaginary);
 
     }
 }
