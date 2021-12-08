@@ -15,34 +15,34 @@ namespace Properties
 
         public IList<string> Seeds
         {
-            get { return this._seeds.ToList(); }
-            set { this._seeds = value.ToArray(); }
+            get => _seeds.ToList();
+            set => _seeds = value.ToArray();
         }
         
         public IList<string> Names 
         {
-            get { return this._names.ToList(); }
-            set { this._names = value.ToArray(); }
+            get => _names.ToList();
+            set => _names = value.ToArray();
         }
 
-        public int GetDeckSize() => this._names.Length * this._seeds.Length;
+        public int DeckSize => _names.Length * _seeds.Length;
         
         public ISet<Card> Deck
         {
             get
             {
-                if (this.Names == null || this.Seeds == null)
+                if (Names == null || Seeds == null)
                 {
                     throw new InvalidOperationException();
                 }
 
                 return new HashSet<Card>(Enumerable
-                    .Range(0, this._names.Length)
+                    .Range(0, _names.Length)
                     .SelectMany(i => Enumerable
-                        .Repeat(i, this._seeds.Length)
+                        .Repeat(i, _seeds.Length)
                         .Zip(
-                            Enumerable.Range(0, this._seeds.Length),
-                            (n, s) => Tuple.Create(this._names[n], this._seeds[s], n)))
+                            Enumerable.Range(0, _seeds.Length),
+                            (n, s) => Tuple.Create(_names[n], _seeds[s], n)))
                     .Select(tuple => new Card(tuple))
                     .ToList());
             }

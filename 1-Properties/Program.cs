@@ -46,7 +46,7 @@ namespace Properties
             };
                 
             // Composite formatting:
-            Console.WriteLine("The {1} deck has {0} cards: ", df.GetDeckSize(), "italian");
+            Console.WriteLine("The {1} deck has {0} cards: ", df.DeckSize, "italian");
             // We could also have used string interpolation:
             // Console.WriteLine($"The {df.GetDeckSize()} deck has {"italian"} cards: ");
 
