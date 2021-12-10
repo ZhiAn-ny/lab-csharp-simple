@@ -44,11 +44,12 @@ namespace Arrays
         /// <exception cref="NullReferenceException">if <paramref name="array"/> is <c>null</c></exception>
         ///
         /// TODO: implement this method
-        /// TODO: (consider reusing the Clone method)
         /// <seealso cref="Examples.BubbleSort"/>
         public static Complex[] SortByPhase(Complex[] array)
         {
-            // var xx = Clone(array).Select(c => c.Phase.ToString()).Aggregate((s1, s2) => s1 + "---" + s2);
+            // var xx = Clone(array).OrderBy(c => c.Phase)
+            //     .Select(c => c.Phase.ToString())
+            //     .Aggregate((s1, s2) => s1 + " | " + s2);
             // Console.WriteLine(xx);
             return Clone(array).OrderBy(c => c.Phase).ToArray();
         }
