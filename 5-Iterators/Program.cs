@@ -1,8 +1,10 @@
+using System.Linq;
+
 namespace Iterators
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
+    ///using System.Linq;
 
     /// <summary>
     /// The runnable entrypoint of the exercise.
@@ -24,14 +26,12 @@ namespace Iterators
             }
 
             IDictionary<int, int> occurrences = numbers
-                .Map(optN => {
-                    Console.Write(optN.ToString() + ",");
-                    return optN;
-                })
+                .Peek(optN => Console.Write(optN.HasValue ? optN.ToString() + "," : "null,"))
                 .SkipSome(1)
                 .TakeSome(len - 2)
                 .Filter(optN => optN.HasValue)
                 .Map(optN => optN.Value)
+                .Peek(e => Console.Write("|" + e))
                 .Reduce(new Dictionary<int, int>(), (d, n) => {
                     if (!d.ContainsKey(n))
                     {

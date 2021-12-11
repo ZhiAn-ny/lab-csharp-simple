@@ -1,3 +1,6 @@
+using System.Diagnostics.Tracing;
+using System.Linq;
+
 namespace Iterators
 {
     using System;
@@ -16,7 +19,7 @@ namespace Iterators
         /// <typeparam name="TAny">the type of the items in the sequence.</typeparam>
         public static void ForEach<TAny>(this IEnumerable<TAny> sequence, Action<TAny> consumer)
         {
-            throw new NotImplementedException();
+            sequence.ToList().ForEach(consumer);
         }
 
         /// <summary>
@@ -29,7 +32,9 @@ namespace Iterators
         /// <returns>the new sequence.</returns>
         public static IEnumerable<TAny> Peek<TAny>(this IEnumerable<TAny> sequence, Action<TAny> consumer)
         {
-            throw new NotImplementedException();
+            var seq = sequence.ToList();
+            seq.ForEach(consumer);
+            return seq.AsEnumerable();
         }
 
         /// <summary>
@@ -43,7 +48,7 @@ namespace Iterators
         /// <returns>the new sequence.</returns>
         public static IEnumerable<TOther> Map<TAny, TOther>(this IEnumerable<TAny> sequence, Func<TAny, TOther> mapper)
         {
-            throw new NotImplementedException();
+            return sequence.Select(mapper);
         }
 
         /// <summary>
@@ -57,7 +62,7 @@ namespace Iterators
         /// <returns>the new sequence.</returns>
         public static IEnumerable<TAny> Filter<TAny>(this IEnumerable<TAny> sequence, Predicate<TAny> predicate)
         {
-            throw new NotImplementedException();
+            return sequence.Where(e => predicate(e));
         }
 
         /// <summary>
@@ -68,9 +73,10 @@ namespace Iterators
         /// <returns>the new sequence.</returns>
         public static IEnumerable<Tuple<int, TAny>> Indexed<TAny>(this IEnumerable<TAny> sequence)
         {
-            throw new NotImplementedException();
+            return Integers().Zip(sequence)
+                    .Select(t => new Tuple<int, TAny>(t.First, t.Second));
         }
-
+        
         /// <summary>
         /// Performs a reduction on the elements of the <paramref name="sequence"/>, using a <paramref name="reducer"/>
         /// function and returns the reduced value, if any, or <see langword="default"/> if not.
@@ -79,11 +85,11 @@ namespace Iterators
         /// <param name="seed">the base accumulator value.</param>
         /// <param name="reducer">the reducer function.</param>
         /// <typeparam name="TAny">the type of the items in the sequence.</typeparam>
-        /// <typeparam name="TOther">the type of the accomulation result.</typeparam>
+        /// <typeparam name="TOther">the type of the accumulation result.</typeparam>
         /// <returns>the new sequence.</returns>
         public static TOther Reduce<TAny, TOther>(this IEnumerable<TAny> sequence, TOther seed, Func<TOther, TAny, TOther> reducer)
         {
-            throw new NotImplementedException();
+            return sequence.Aggregate(seed, (s, elem) => reducer(s, elem));
         }
 
         /// <summary>
@@ -97,7 +103,21 @@ namespace Iterators
         /// <returns>the new sequence.</returns>
         public static IEnumerable<TAny> SkipWhile<TAny>(this IEnumerable<TAny> sequence, Predicate<TAny> predicate)
         {
-            throw new NotImplementedException();
+            var en = sequence.GetEnumerator();
+            while (en.MoveNext())
+            {
+                var i = en.Current;
+                if (!predicate(i))
+                {
+                    yield return i;
+                    break;
+                }
+            }
+            while (en.MoveNext())
+            {
+                yield return en.Current;
+            }
+            en.Dispose();
         }
 
         /// <summary>
@@ -111,7 +131,7 @@ namespace Iterators
         /// <returns>the new sequence.</returns>
         public static IEnumerable<TAny> SkipSome<TAny>(this IEnumerable<TAny> sequence, long count)
         {
-            throw new NotImplementedException();
+            return sequence.Skip(int.Parse(count.ToString()));
         }
 
         /// <summary>
@@ -126,7 +146,17 @@ namespace Iterators
         /// <returns>the new sequence.</returns>
         public static IEnumerable<TAny> TakeWhile<TAny>(this IEnumerable<TAny> sequence, Predicate<TAny> predicate)
         {
-            throw new NotImplementedException();
+            var en = sequence.GetEnumerator();
+            while (en.MoveNext())
+            {
+                var i = en.Current;
+                if (!predicate(i))
+                {
+                    yield break;
+                }
+                yield return i;
+            }
+            en.Dispose();
         }
 
         /// <summary>
@@ -139,7 +169,7 @@ namespace Iterators
         /// <returns>the new sequence.</returns>
         public static IEnumerable<TAny> TakeSome<TAny>(this IEnumerable<TAny> sequence, long count)
         {
-            throw new NotImplementedException();
+            return sequence.Take(int.Parse(count.ToString()));
         }
 
         /// <summary>
@@ -149,7 +179,7 @@ namespace Iterators
         /// <returns>an infinite sequence of integers.</returns>
         public static IEnumerable<int> Integers(int start)
         {
-            throw new NotImplementedException();
+            for (int i = start; true; i++) yield return i;
         }
 
         /// <summary>
@@ -165,5 +195,7 @@ namespace Iterators
         /// <param name="count">the number of items of the sequence.</param>
         /// <returns>the sequence of integers.</returns>
         public static IEnumerable<int> Range(int start, int count) => Integers(start).TakeSome(count);
+
     }
+    
 }
