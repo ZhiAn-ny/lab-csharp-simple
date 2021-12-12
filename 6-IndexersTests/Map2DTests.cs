@@ -50,7 +50,7 @@ namespace Indexers
                 Enumerable.Range(1, 10),
                 Enumerable.Range(1, 10),
                 (i, j) => i * j);
-
+            
             if (!this._pythagoreanTable.Equals(newMap2D))
             {
                 Assert.Fail("Wrong implementation");
